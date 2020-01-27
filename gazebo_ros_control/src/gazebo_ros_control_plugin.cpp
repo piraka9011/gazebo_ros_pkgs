@@ -14,6 +14,8 @@
 
 #include <memory>
 
+#include "rclcpp/time.hpp"
+
 #include "gazebo_ros_control/gazebo_ros_control_plugin.hpp"
 
 namespace gazebo_ros_control
@@ -21,15 +23,43 @@ namespace gazebo_ros_control
 class GazeboRosControlImpl
 {
 public:
-  GazeboRosControlImpl() = default;
+  GazeboRosControlImpl()
+  : control_period_(rclcpp::Duration(0)),
+    last_update_sim_time_ros_(rclcpp::Time()),
+    last_write_sim_time_ros_(rclcpp::Time()) {}
+
   ~GazeboRosControlImpl() = default;
+
+  void Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf);
+  void Update();
+  void Reset();
+
+private:
+  std::shared_ptr<controller_manager::ControllerManager> controller_manager_;
+
+  rclcpp::Duration control_period_;
+  rclcpp::Time last_update_sim_time_ros_;
+  rclcpp::Time last_write_sim_time_ros_;
 };
 
 GazeboRosControl::GazeboRosControl()
 : impl_(std::make_unique<GazeboRosControlImpl>())
 {}
 
-GazeboRosControl::~GazeboRosControl() {}
+void GazeboRosControl::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf)
+{
+  impl_->Load(model, sdf);
+}
+
+void GazeboRosControl::Update()
+{
+  impl_->Update();
+}
+
+void GazeboRosControl::Reset()
+{
+  impl_->Reset();
+}
 
 GZ_REGISTER_MODEL_PLUGIN(GazeboRosControl)
 }

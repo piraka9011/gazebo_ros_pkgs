@@ -17,6 +17,8 @@
 
 #include <memory>
 
+#include "controller_manager/controller_manager.hpp"
+
 #include <gazebo/common/Plugin.hh>
 
 namespace gazebo_ros_control
@@ -27,10 +29,10 @@ class GazeboRosControl : public gazebo::ModelPlugin
 {
 public:
   GazeboRosControl();
-  ~GazeboRosControl();
+  ~GazeboRosControl() override = default;
 
 protected:
-  void Load(gazebo::physics::ModelPtr _model, sdf::ElementPtr _sdf) override;
+  void Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf) override;
 
   void Update();
 

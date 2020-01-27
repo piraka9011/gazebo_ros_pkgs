@@ -16,19 +16,20 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(controller_manager REQUIRED)
 find_package(gazebo_dev REQUIRED)
 find_package(gazebo_msgs REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(urdf REQUIRED)
 
-add_library(${PROJECT_NAME} src/gazebo_ros_control_plugin.cpp)
+add_library(${PROJECT_NAME}
+  src/gazebo_ros_control_plugin.cpp)
 target_include_directories(${PROJECT_NAME}
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(${PROJECT_NAME} gazebo_ros rclcpp)
+ament_target_dependencies(${PROJECT_NAME} controller_manager gazebo_ros rclcpp)
 
 ament_export_include_directories(include)
 
